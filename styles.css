@@ -1347,3 +1347,15 @@ body.page-loading {
 .schedule-card {
   animation: fadeIn 0.6s ease-out;
 }
+
+/* Hilangkan geser kanan di mobile */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Pastikan semua elemen ngikutin ukuran layar */
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
