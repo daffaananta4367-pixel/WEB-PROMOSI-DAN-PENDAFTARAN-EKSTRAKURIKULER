@@ -1258,7 +1258,7 @@ body.page-loading {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .hero-content {
     grid-template-columns: 1fr;
   }
@@ -1294,7 +1294,7 @@ body.page-loading {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .header-content {
     flex-direction: column;
     gap: 20px;
