@@ -1019,3 +1019,26 @@ document.addEventListener("DOMContentLoaded", () => {
   loadEvents()
   loadSchedule()
 })
+
+// ===== ✅ FIXED: Burger menu & auto-close on click =====
+(function initMobileNav() {
+  const menuToggleEl = document.querySelector(".menu-toggle");
+  const navMenuEl = document.querySelector(".nav-menu");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  if (!menuToggleEl || !navMenuEl) return;
+
+  // Toggle show/hide menu
+  menuToggleEl.addEventListener("click", () => {
+    navMenuEl.classList.toggle("active");
+  });
+
+  // Close menu when link clicked (mobile only)
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (navMenuEl.classList.contains("active")) {
+        navMenuEl.classList.remove("active");
+      }
+    });
+  });
+})();
