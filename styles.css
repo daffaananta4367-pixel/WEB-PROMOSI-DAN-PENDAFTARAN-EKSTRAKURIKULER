@@ -2053,4 +2053,30 @@ html, body {
   background: rgba(255, 0, 0, 0.8);
 }
 
+/* === Hero Title Image Responsive (DAFFA – 2025-11-06) === */
+.hero-title-image {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.hero-title-img {
+  width: clamp(250px, 60vw, 700px); /* menyesuaikan otomatis */
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Responsif tambahan */
+@media (max-width: 768px) {
+  .hero-title-img {
+    width: clamp(200px, 70vw, 500px);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title-img {
+    width: clamp(180px, 80vw, 400px);
+  }
+}
