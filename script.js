@@ -1,3 +1,4 @@
+
 // Data Storage using localStorage
 const STORAGE_KEYS = {
   EKSKUL: "smaiptektangsel_ekskul",
@@ -5,7 +6,10 @@ const STORAGE_KEYS = {
   ADMIN: "smaiptektangsel_admin",
   IMAGES: "smaiptektangsel_images",
   GALLERY: "ssmaiptektangsel_gallery",
-}
+}; // ✅ tambahkan titik koma di sini!
+
+let currentUploadEkskulId = null;
+
 
 function initPageTransition() {
   const transition = document.querySelector(".page-transition")
@@ -208,7 +212,7 @@ function loadEkskulList() {
             <span class="service-icon">${ekskul.icon}</span>
             <h3>${ekskul.name}</h3>
             <p>${ekskul.description}</p>
-            <a href="ekskul-detail.html?id=${ekskul.id}" class="btn-detail" onclick="event.stopPropagation()">LIHAT DETAIL</a>
+            <a href="ekskul-detail.html?id=${ekskul.id}" class="btn-detail" onclick="event.stopPropagation()">Lihat</a>
         </div>
     `,
     )
@@ -363,7 +367,7 @@ function loadEkskulDetail() {
         </div>
         
         <div class="detail-cta">
-            <a href="${ekskul.formLink}" target="_blank" class="btn-register">DAFTAR SEKARANG →</a>
+            <a href="${ekskul.formLink}" target="_blank" class="btn-register">AYO DAFTAR SEKARANG</a>
         </div>
     `
 }
@@ -472,10 +476,9 @@ function loadDashboardData() {
 
 // Load Ekskul Table
 function loadEkskulTable() {
-  const ekskulList = getEkskul()
-  const tbody = document.getElementById("ekskulTableBody")
-
-  if (!tbody) return
+  const ekskulList = getEkskul();
+  const tbody = document.getElementById("ekskulTableBody");
+  if (!tbody) return;
 
   tbody.innerHTML = ekskulList
     .map(
@@ -487,13 +490,52 @@ function loadEkskulTable() {
             <td>${ekskul.schedule}</td>
             <td>
                 <button class="btn-upload-img" onclick="openImageUpload(${ekskul.id})">UPLOAD FOTO</button>
+                <button class="btn-delete" onclick="editEkskul(${ekskul.id})">EDIT</button>
                 <button class="btn-delete" onclick="deleteEkskul(${ekskul.id})">HAPUS</button>
             </td>
         </tr>
-    `,
+      `
     )
-    .join("")
+    .join("");
 }
+
+function editEkskul(id) {
+  const ekskulList = getEkskul();
+  const ekskul = ekskulList.find((e) => e.id === id);
+  if (!ekskul) return;
+
+  // Tampilkan form tambah ekskul untuk edit
+  const formContainer = document.getElementById("addEkskulForm");
+  formContainer.style.display = "block";
+
+  const form = formContainer.querySelector("form");
+  form.name.value = ekskul.name;
+  form.icon.value = ekskul.icon;
+  form.description.value = ekskul.description;
+  form.fullDescription.value = ekskul.fullDescription;
+  form.schedule.value = ekskul.schedule;
+  form.formLink.value = ekskul.formLink;
+
+  // Ubah fungsi submit untuk menyimpan edit
+  form.onsubmit = function (event) {
+    event.preventDefault();
+
+    ekskul.name = form.name.value;
+    ekskul.icon = form.icon.value;
+    ekskul.description = form.description.value;
+    ekskul.fullDescription = form.fullDescription.value;
+    ekskul.schedule = form.schedule.value;
+    ekskul.formLink = form.formLink.value;
+
+    saveEkskul(ekskulList);
+    hideAddEkskulForm();
+    loadEkskulTable();
+    loadScheduleTable();
+
+    alert("Data ekskul berhasil diperbarui!");
+  };
+}
+
 
 // Load Events Table
 function loadEventsTable() {
@@ -657,45 +699,140 @@ function deleteEvent(id) {
 }
 
 // Image Upload Functions
-let currentUploadEkskulId = null
 let tempUploadedImages = [null, null, null, null] // Array for 4 photos
 
-function openImageUpload(ekskulId) {
-  currentUploadEkskulId = ekskulId
-  tempUploadedImages = [null, null, null, null]
+function openImageUpload(id) {
+  currentUploadEkskulId = id;
+  const ekskulList = getEkskul();
+  const ekskul = ekskulList.find(e => e.id === id);
+  if (!ekskul) return;
 
-  const ekskulList = getEkskul()
-  const ekskul = ekskulList.find((e) => e.id === ekskulId)
+  document.getElementById("uploadEkskulName").textContent = ekskul.name;
+  document.getElementById("imageUploadSection").style.display = "block";
 
-  if (!ekskul) return
+  // tampilkan foto yang sudah tersimpan
+  for (let i = 0; i < 4; i++) {
+    const preview = document.getElementById(`preview${i}`);
+    if (ekskul.images && ekskul.images[i]) {
+      preview.src = ekskul.images[i];
+      preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
+    }
+  }
+}
 
-  document.getElementById("uploadEkskulName").textContent = ekskul.name
-  document.getElementById("imageUploadSection").style.display = "block"
+function triggerMultipleUpload() {
+  document.getElementById("multiImageInput").click();
+}
 
-  // Load existing images if any
-  if (ekskul.images && ekskul.images.length > 0) {
-    ekskul.images.forEach((img, index) => {
-      if (index < 4 && img) {
-        tempUploadedImages[index] = img
-        displaySlotImage(index, img)
+function handleMultipleUpload(event) {
+  const files = Array.from(event.target.files).slice(0, 4); // maksimal 4
+  if (files.length === 0) return;
+
+  const ekskulList = getEkskul();
+  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
+  if (!ekskul) return;
+
+  ekskul.images = []; // reset foto lama
+
+  let loadedCount = 0;
+
+  files.forEach((file, index) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      ekskul.images.push(e.target.result);
+      const preview = document.getElementById(`preview${index}`);
+      if (preview) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
       }
-    })
-  } else {
-    // Reset all slots
-    for (let i = 0; i < 4; i++) {
-      resetSlot(i)
+
+      loadedCount++;
+      if (loadedCount === files.length) {
+        saveEkskul(ekskulList);
+        alert("Foto berhasil disimpan dan terhubung ke detail ekskul!");
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Kosongkan preview sisanya
+  for (let i = files.length; i < 4; i++) {
+    const preview = document.getElementById(`preview${i}`);
+    if (preview) preview.style.display = "none";
+  }
+}
+
+function deleteImage(index) {
+  if (currentUploadEkskulId === null) return;
+
+  const ekskulList = getEkskul();
+  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
+  if (!ekskul || !ekskul.images) return;
+
+  // Hapus foto berdasarkan index
+  ekskul.images.splice(index, 1);
+
+  // Simpan perubahan ke localStorage
+  saveEkskul(ekskulList);
+
+  // Refresh semua preview agar urutannya rapi kembali
+  for (let i = 0; i < 4; i++) {
+    const preview = document.getElementById(`preview${i}`);
+    if (preview) {
+      if (ekskul.images[i]) {
+        preview.src = ekskul.images[i];
+        preview.style.display = "block";
+      } else {
+        preview.src = "";
+        preview.style.display = "none";
+      }
     }
   }
 
-  // Scroll to upload section
-  document.getElementById("imageUploadSection").scrollIntoView({ behavior: "smooth" })
+  alert("Foto berhasil dihapus!");
 }
+
+function deleteAllImages() {
+  if (currentUploadEkskulId === null) return;
+  const ekskulList = getEkskul();
+  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
+  if (!ekskul) return;
+
+  ekskul.images = [];
+  saveEkskul(ekskulList);
+
+  for (let i = 0; i < 4; i++) {
+    const preview = document.getElementById(`preview${i}`);
+    if (preview) {
+      preview.src = "";
+      preview.style.display = "none";
+    }
+  }
+
+  alert("Semua foto berhasil dihapus!");
+}
+
+
+function saveImages() {
+  if (currentUploadEkskulId === null) return;
+  const ekskulList = getEkskul();
+  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
+  if (!ekskul) return;
+
+  saveEkskul(ekskulList);
+  alert("Foto ekskul berhasil disimpan!");
+  closeImageUpload();
+}
+
 
 function closeImageUpload() {
   document.getElementById("imageUploadSection").style.display = "none"
   currentUploadEkskulId = null
   tempUploadedImages = [null, null, null, null]
 }
+
 
 function triggerFileInput(slotIndex) {
   document.getElementById(`imageInput${slotIndex}`).click()
