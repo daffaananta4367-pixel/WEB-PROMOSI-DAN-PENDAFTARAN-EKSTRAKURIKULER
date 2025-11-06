@@ -1359,3 +1359,698 @@ html, body {
   box-sizing: border-box;
   max-width: 100%;
 }
+
+/* --- Tambahan Perbaikan Responsif --- */
+
+/* Font responsif untuk semua ukuran layar */
+html {
+  font-size: 100%;
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 85%;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 80%;
+  }
+}
+
+/* === Tambahan Perbaikan Responsif (Daffa – 2025-11-06) === */
+
+/* Pastikan judul tidak terpotong dan font mengikuti ukuran layar */
+.section-title,
+.gallery-title {
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+}
+
+/* Responsif untuk judul besar (EKSTRAKURIKULER KAMI dan WHERE TALENT MEETS ACHIEVEMENT) */
+@media (max-width: 1024px) {
+  .section-title {
+    font-size: clamp(28px, 4vw, 40px);
+  }
+  .gallery-title {
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: clamp(24px, 5vw, 36px);
+    padding: 0 10px;
+  }
+  .gallery-title {
+    font-size: clamp(26px, 6vw, 40px);
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+  .gallery-title {
+    font-size: clamp(22px, 8vw, 32px);
+  }
+}
+
+/* Perbaikan font hero agar fleksibel di semua perangkat */
+.title-small {
+  font-size: clamp(24px, 5vw, 48px);
+}
+
+.title-large {
+  font-size: clamp(28px, 8vw, 72px);
+}
+
+.hero-description p {
+  font-size: clamp(14px, 3.5vw, 16px);
+}
+
+.btn-schedule {
+  font-size: clamp(14px, 4vw, 16px);
+  padding: clamp(10px, 3vw, 15px) clamp(25px, 6vw, 40px);
+}
+
+/* Perbaikan grid kartu ekskul agar dua kolom di mobile */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tambahan agar gambar dan elemen besar tetap proporsional di mobile */
+.hero-image,
+.service-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Pastikan tidak ada teks atau elemen keluar layar */
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* === PERBAIKAN FINAL: CARD PERSEGI PANJANG & LOGO RESPONSIVE (DAFFA – 2025-11-06) === */
+
+/* Grid dua kolom di semua ukuran layar */
+#ekskulList.services-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 25px !important;
+  padding: 0 10px;
+  justify-items: center;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+/* Card persegi panjang proporsional (tidak kotak & tidak kepanjangan) */
+.service-card {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  min-height: 320px; /* tinggi minimum agar seimbang */
+  background-color: #ffffff;
+  border-radius: 30px;
+  border: 4px solid #000000;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Logo di dalam card agar responsif dan tidak terlalu besar */
+.service-icon {
+  font-size: clamp(40px, 8vw, 70px);
+  margin-bottom: 15px;
+}
+
+/* Judul ekskul di card */
+.service-card h3 {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 900;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+}
+
+/* Deskripsi di card */
+.service-card p {
+  font-size: clamp(13px, 3vw, 15px);
+  color: #333333;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  padding: 0 5px;
+  overflow-wrap: break-word;
+}
+
+/* Tombol “Lihat Detail” di card */
+.btn-detail {
+  display: inline-block;
+  font-size: clamp(12px, 3vw, 14px);
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 3px solid #000000;
+  font-weight: 900;
+  background-color: #14ea00;
+  color: #000000;
+  transition: transform 0.3s;
+  white-space: nowrap;
+}
+
+.btn-detail:hover {
+  transform: scale(1.05);
+}
+
+/* Logo utama (di header) dibuat responsif */
+.school-logo {
+  width: clamp(35px, 7vw, 50px);
+  height: clamp(35px, 7vw, 50px);
+  object-fit: contain;
+}
+
+/* Pastikan tidak ada yang keluar layar */
+html, body {
+  overflow-x: hidden !important;
+}
+
+/* === FIX BUTTON "LIHAT DETAIL" KELUAR DARI BATAS (DAFFA – 2025-11-06) === */
+
+.btn-detail {
+  display: inline-block;
+  font-size: clamp(12px, 3vw, 14px);
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 3px solid #000000;
+  font-weight: 900;
+  background-color: #14ea00;
+  color: #000000;
+  text-decoration: none;
+  text-align: center;
+  white-space: normal;        /* izinkan teks turun ke baris baru */
+  line-height: 1.2;           /* buat teks pas di tengah vertikal */
+  word-wrap: break-word;      /* teks panjang otomatis turun */
+  max-width: 90%;             /* jaga tombol tidak melebar keluar card */
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  overflow: hidden;           /* pastikan teks tidak keluar */
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.btn-detail:hover {
+  transform: scale(1.05);
+  background-color: #12c400; /* sedikit gelap saat hover */
+}
+
+/* === FINAL RESPONSIVE FIX CARD & BUTTON (DAFFA – 2025-11-06) === */
+
+/* Dua kolom responsif di semua layar */
+#ekskulList.services-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 25px !important;
+  padding: 0 10px;
+  justify-items: center;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+/* Card persegi panjang proporsional */
+.service-card {
+  width: 100%;
+  max-width: 360px;
+  min-height: 320px;
+  background-color: #ffffff;
+  border-radius: 30px;
+  border: 4px solid #000000;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+  padding: clamp(18px, 3vw, 25px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  transition: transform 0.3s;
+  box-sizing: border-box;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Ikon/logo di card */
+.service-icon {
+  font-size: clamp(40px, 8vw, 70px);
+  margin-bottom: clamp(10px, 2vw, 15px);
+}
+
+/* Judul ekskul */
+.service-card h3 {
+  font-size: clamp(16px, 3.5vw, 22px);
+  font-weight: 900;
+  margin-bottom: clamp(8px, 2vw, 12px);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Deskripsi di card */
+.service-card p {
+  font-size: clamp(12px, 3vw, 15px);
+  color: #333333;
+  line-height: 1.4;
+  margin-bottom: clamp(10px, 2vw, 15px);
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tombol LIHAT DETAIL */
+.btn-detail {
+  display: inline-block;
+  font-size: clamp(12px, 3vw, 15px); /* mengikuti ukuran layar */
+  padding: clamp(8px, 2vw, 12px) clamp(20px, 4vw, 30px);
+  border-radius: 25px;
+  border: 3px solid #000000;
+  font-weight: 900;
+  background-color: #14ea00;
+  color: #000000;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap; /* biar teks gak turun */
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.btn-detail:hover {
+  transform: scale(1.05);
+  background-color: #12c400;
+}
+
+/* Logo header agar responsif di semua ukuran layar */
+.school-logo {
+  width: clamp(35px, 7vw, 50px);
+  height: clamp(35px, 7vw, 50px);
+  object-fit: contain;
+}
+
+/* Pastikan teks lain juga fleksibel */
+.section-title,
+.gallery-title {
+  font-size: clamp(26px, 5vw, 48px);
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+}
+
+.title-small {
+  font-size: clamp(22px, 6vw, 40px);
+}
+.title-large {
+  font-size: clamp(28px, 8vw, 60px);
+}
+.hero-description p {
+  font-size: clamp(14px, 3.5vw, 16px);
+}
+.btn-schedule {
+  font-size: clamp(12px, 3.5vw, 16px);
+  padding: clamp(10px, 3vw, 15px) clamp(25px, 6vw, 40px);
+}
+
+/* Pastikan semua muat layar */
+html, body {
+  overflow-x: hidden !important;
+}
+
+/* === FINAL FIX: DETAIL EKSKUL & FOTO RESPONSIF SEMUA LAYAR  === */
+
+/* Ukuran dan proporsi konten detail */
+.detail-content {
+  padding: clamp(20px, 4vw, 50px);
+  border-radius: 25px;
+  box-shadow: 10px 10px 0 #0034df;
+}
+
+/* Header dan ikon lebih fleksibel */
+.detail-header h1 {
+  font-size: clamp(24px, 6vw, 40px);
+  line-height: 1.2;
+}
+
+.detail-icon {
+  font-size: clamp(50px, 10vw, 100px);
+  margin-bottom: 15px;
+}
+
+/* Tombol jadwal */
+.detail-schedule {
+  font-size: clamp(12px, 4vw, 16px);
+  padding: clamp(8px, 2vw, 15px) clamp(15px, 4vw, 30px);
+}
+
+/* Paragraf isi */
+.detail-body p {
+  font-size: clamp(14px, 3.8vw, 18px);
+  line-height: 1.6;
+  color: #333;
+}
+
+/* === GRID FOTO === */
+
+/* Default desktop → 3 kolom */
+.gallery-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.gallery-images img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 4px solid #000;
+  transition: transform 0.3s;
+}
+
+.gallery-images img:hover {
+  transform: scale(1.03);
+}
+
+/* Tablet (<= 900px) → 2 kolom */
+@media (max-width: 900px) {
+  .gallery-images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  .gallery-images img {
+    height: 200px;
+  }
+}
+
+/* HP kecil (<= 600px) → tetap grid tapi 2 kolom */
+@media (max-width: 600px) {
+  .gallery-images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .gallery-images img {
+    height: 160px;
+  }
+}
+
+/* HP sangat kecil (<= 400px) → 1 kolom biar muat layar */
+@media (max-width: 400px) {
+  .gallery-images {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gallery-images img {
+    height: 200px;
+  }
+}
+
+/* === FINAL ESTETIK: GRID FOTO DETAIL EKSKUL  === */
+
+/* Default desktop → 3 kolom */
+.gallery-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+}
+
+.gallery-images img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 4px solid #000;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+.gallery-images img:hover {
+  transform: scale(1.03);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Tablet (<= 900px) → 2 kolom proporsional */
+@media (max-width: 900px) {
+  .gallery-images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  .gallery-images img {
+    height: 200px;
+  }
+}
+
+/* HP kecil (<= 600px) → 2 kolom dengan ruang kosong kiri-kanan */
+@media (max-width: 600px) {
+  .gallery-images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 20px; /* beri ruang kiri-kanan agar tidak nempel layar */
+    justify-content: center;
+  }
+
+  .gallery-images img {
+    width: 90%; /* tidak penuh — ada ruang putih di kanan-kiri */
+    height: 150px;
+    border-radius: 18px;
+    border: 3px solid #000;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* HP sangat kecil (<= 400px) → tetap 2 kolom kecil dan rapi */
+@media (max-width: 400px) {
+  .gallery-images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 15px;
+  }
+
+  .gallery-images img {
+    width: 85%; /* sedikit lebih kecil agar tampak estetik */
+    height: 130px;
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* === PERBAIKAN TAMPILAN DETAIL EKSUL AGAR TIDAK TERLALU PANJANG ( === */
+
+/* Umum: lebih ringkas dan padat */
+.detail-content {
+  padding: clamp(15px, 3vw, 35px);
+  border-radius: 25px;
+  box-shadow: 8px 8px 0 #0034df;
+  max-width: 900px; /* biar tidak melebar di desktop */
+  margin: 0 auto;
+}
+
+/* Header lebih ringkas */
+.detail-header {
+  margin-bottom: 25px;
+}
+
+.detail-icon {
+  font-size: clamp(45px, 9vw, 80px);
+  margin-bottom: 10px;
+}
+
+.detail-header h1 {
+  font-size: clamp(22px, 5vw, 36px);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.detail-schedule {
+  font-size: clamp(11px, 3.5vw, 15px);
+  padding: clamp(6px, 2vw, 12px) clamp(12px, 4vw, 25px);
+  border-radius: 20px;
+}
+
+/* Isi body lebih compact */
+.detail-body {
+  margin-bottom: 25px;
+}
+
+.detail-body h2 {
+  font-size: clamp(18px, 4.5vw, 28px);
+  margin-bottom: 12px;
+}
+
+.detail-body p {
+  font-size: clamp(13px, 3.5vw, 16px);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+/* Section galeri */
+.detail-gallery {
+  margin-bottom: 25px;
+}
+
+.detail-gallery h2 {
+  font-size: clamp(18px, 4.5vw, 26px);
+  margin-bottom: 15px;
+}
+
+/* Tombol daftar agar proporsional */
+.detail-cta {
+  margin-top: 20px;
+}
+
+.btn-register {
+  font-size: clamp(14px, 4vw, 18px);
+  padding: clamp(10px, 3vw, 15px) clamp(25px, 6vw, 40px);
+  border-radius: 30px;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Untuk layar kecil (≤600px): lebih rapat & seimbang */
+@media (max-width: 600px) {
+  .detail-content {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .detail-header h1 {
+    font-size: 22px;
+  }
+
+  .detail-icon {
+    font-size: 60px;
+  }
+
+  .detail-body p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .btn-register {
+    font-size: 14px;
+    padding: 10px 25px;
+  }
+}
+
+/* === SEMBUNYIKAN LOGIN ADMIN DI MOBILE  === */
+
+/* Default: tombol tetap muncul di PC/laptop */
+.btn-login {
+  display: inline-block;
+}
+
+/* Tablet dan HP (layar ≤ 900px) → sembunyikan tombol LOGIN ADMIN */
+@media (max-width: 900px) {
+  .btn-login {
+    display: none;
+  }
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.upload-slot {
+  border: 3px dashed #000;
+  border-radius: 20px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+.upload-slot {
+  position: relative;
+  border: 3px dashed #000;
+  border-radius: 20px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  overflow: hidden;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.delete-photo-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  font-size: 18px;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-slot:hover .delete-photo-btn {
+  display: flex;
+}
+
+.delete-photo-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+
