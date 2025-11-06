@@ -103,58 +103,58 @@
                 
                 <!-- Modified image upload section to support 4 photos instead of 6 -->
                 <div id="imageUploadSection" class="image-upload-section" style="display: none;">
+
                     <h3>Upload Foto untuk <span id="uploadEkskulName"></span></h3>
-                    <p class="upload-instruction">Upload 4 foto kegiatan ekstrakurikuler</p>
-                    
-                    <div class="upload-grid">
-                        <div class="upload-slot" onclick="triggerFileInput(0)">
-                            <input type="file" id="imageInput0" accept="image/*" style="display: none;" onchange="handleSingleImageUpload(0, event)">
-                            <div class="upload-placeholder" id="placeholder0">
-                                <span class="upload-icon">📸</span>
-                                <p>Foto 1</p>
-                            </div>
-                            <img id="preview0" class="image-preview" style="display: none;">
-                            <button class="btn-remove-slot" id="remove0" style="display: none;" onclick="event.stopPropagation(); removeSlotImage(0)">✕</button>
-                        </div>
-                        
-                        <div class="upload-slot" onclick="triggerFileInput(1)">
-                            <input type="file" id="imageInput1" accept="image/*" style="display: none;" onchange="handleSingleImageUpload(1, event)">
-                            <div class="upload-placeholder" id="placeholder1">
-                                <span class="upload-icon">📸</span>
-                                <p>Foto 2</p>
-                            </div>
-                            <img id="preview1" class="image-preview" style="display: none;">
-                            <button class="btn-remove-slot" id="remove1" style="display: none;" onclick="event.stopPropagation(); removeSlotImage(1)">✕</button>
-                        </div>
-                        
-                        <div class="upload-slot" onclick="triggerFileInput(2)">
-                            <input type="file" id="imageInput2" accept="image/*" style="display: none;" onchange="handleSingleImageUpload(2, event)">
-                            <div class="upload-placeholder" id="placeholder2">
-                                <span class="upload-icon">📸</span>
-                                <p>Foto 3</p>
-                            </div>
-                            <img id="preview2" class="image-preview" style="display: none;">
-                            <button class="btn-remove-slot" id="remove2" style="display: none;" onclick="event.stopPropagation(); removeSlotImage(2)">✕</button>
-                        </div>
-                        
-                        <div class="upload-slot" onclick="triggerFileInput(3)">
-                            <input type="file" id="imageInput3" accept="image/*" style="display: none;" onchange="handleSingleImageUpload(3, event)">
-                            <div class="upload-placeholder" id="placeholder3">
-                                <span class="upload-icon">📸</span>
-                                <p>Foto 4</p>
-                            </div>
-                            <img id="preview3" class="image-preview" style="display: none;">
-                            <button class="btn-remove-slot" id="remove3" style="display: none;" onclick="event.stopPropagation(); removeSlotImage(3)">✕</button>
-                        </div>
+ 
+                    <p class="upload-instruction">Upload maksimal 4 foto kegiatan ekstrakurikuler</p>
+
+  
+                    <!-- Tombol upload tunggal -->
+ 
+                    <div class="form-actions" style="margin-bottom:20px;">
+   
+                        <button class="btn-upload-img" onclick="triggerMultipleUpload()">UPLOAD FOTO</button>
+                        <button class="btn-delete" onclick="deleteAllImages()">HAPUS SEMUA FOTO</button>
+
+    
+                        <input type="file" id="multiImageInput" accept="image/*" multiple style="display:none;" onchange="handleMultipleUpload(event)">
+ 
                     </div>
-                    
-                    <p class="upload-note">Format: JPG, PNG | Maksimal 2MB per foto</p>
-                    
-                    <div class="form-actions">
-                        <button onclick="saveImages()" class="btn-submit">SIMPAN FOTO</button>
-                        <button onclick="closeImageUpload()" class="btn-cancel">TUTUP</button>
-                    </div>
+
+  <!-- Grid preview 4 foto -->
+                <div class="upload-grid">
+  <div class="upload-slot">
+    <img id="preview0" class="image-preview" style="display:none;">
+    <button class="delete-photo-btn" onclick="deleteImage(0)">×</button>
+  </div>
+  <div class="upload-slot">
+    <img id="preview1" class="image-preview" style="display:none;">
+    <button class="delete-photo-btn" onclick="deleteImage(1)">×</button>
+  </div>
+  <div class="upload-slot">
+    <img id="preview2" class="image-preview" style="display:none;">
+    <button class="delete-photo-btn" onclick="deleteImage(2)">×</button>
+  </div>
+  <div class="upload-slot">
+    <img id="preview3" class="image-preview" style="display:none;">
+    <button class="delete-photo-btn" onclick="deleteImage(3)">×</button>
+  </div>
+</div>
+
+
+  
+                <p class="upload-note">Format: JPG, PNG | Maksimal 2MB per foto | Maksimal 4 foto</p>
+
+                <div class="form-actions">
+   
+                    <button onclick="saveImages()" class="btn-submit">SIMPAN FOTO</button>
+    
+                    <button onclick="closeImageUpload()" class="btn-cancel">TUTUP</button>
+  
                 </div>
+
+                </div>
+
             </section>
 
             <section id="eventsSection" class="dashboard-section">
@@ -256,18 +256,7 @@
                     <p class="section-note">Upload foto untuk galeri grid di halaman utama (maksimal 10 foto)</p>
                 </div>
 
-                <div class="gallery-upload-actions">
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(0)">Foto 1</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(1)">Foto 2</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(2)">Foto 3</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(3)">Foto 4</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(4)">Foto 5</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(5)">Foto 6</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(6)">Foto 7</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(7)">Foto 8</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(8)">Foto 9</button>
-                    <button class="btn-gallery-trigger" onclick="triggerGalleryInput(9)">Foto 10</button>
-                </div>
+               
 
                 <div class="gallery-upload-container">
                     <div class="upload-grid-gallery">
@@ -367,7 +356,7 @@
                             <input type="file" id="galleryInput9" accept="image/*" style="display: none;" onchange="handleGalleryImageUpload(9, event)">
                             <div class="upload-placeholder" id="galleryPlaceholder9">
                                 <span class="upload-icon">📸</span>
-                                <p>Foto 10</p>
+                                <p>Foto 10 </p>
                             </div>
                             <img id="galleryPreview9" class="image-preview" style="display: none;">
                             <button class="btn-remove-slot" id="galleryRemove9" style="display: none;" onclick="event.stopPropagation(); removeGalleryImage(9)">✕</button>
