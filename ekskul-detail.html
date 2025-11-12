@@ -1,90 +1,172 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Ekstrakurikuler - SMK IPTEK TANGSEL</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Ekstrakurikuler - SMK IPTEK TANGSEL</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="page-transition"></div>
+  <div class="page-transition"></div>
 
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo-section">
-                    <!-- Replaced emoji with actual school logo -->
-                    <img src="LOGO-SMK-IPTEK.png" alt="Logo SMK IPTEL TANGSEL" class="school-logo">
-                    <span class="site-name">SMK IPTEK TANGSEL</span>
-                </div>
-                <nav class="nav-menu">
-                    <a href="index.html" class="nav-link">HOME</a>
-                    <span class="nav-separator">●</span>
-                    <a href="index.html#ekskul" class="nav-link active">EKSKUL</a>
-                    <span class="nav-separator">●</span>
-                    <a href="index.html#jadwal" class="nav-link">JADWAL</a>
-                    <span class="nav-separator">●</span>
-                    <a href="index.html#event" class="nav-link">EVENT</a>
-                    <span class="nav-separator">●</span>
-                    <a href="index.html#contact" class="nav-link">CONTACT</a>
-                </nav>
-                <a href="admin-login.html" class="btn-login">LOGIN ADMIN</a>
-            </div>
+  <!-- === HEADER DENGAN GARIS 3 (DIPERBAIKI) === -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="LOGO-SMK-IPTEK.png" alt="Logo SMK IPTEK TANGSEL" class="school-logo">
+          <span class="site-name">SMK IPTEK TANGSEL</span>
         </div>
-    </header>
 
-    <section class="detail-section">
-        <div class="container">
-           
-            
-            <div class="detail-content" id="detailContent">
-                 Content will be loaded by JavaScript 
-            </div>
+        <!-- Tombol garis 3 -->
+        <div class="menu-toggle" id="menuToggle">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
-    </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-col">
-                    <h4>SMK IPTEK TANGSEL</h4>
-                    <p>Jl. Lkr. Selatan, Muncul, Kec. Setu, Kota Tangerang Selatan, Banten, South Tangerang 15314</p>
-                </div>
-                <div class="footer-col">
-                    <h4>KONTAK</h4>
-                    <p>Telp: (021) 7562-457<br>Email: smkiptektangsel@gmail.com<br></p>
-                </div>
-                <div class="footer-col">
-                    <h4>MEDIA SOSIAL</h4>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/iptektangsel/?hl=id" target="_blank">Instagram</a>
-                        <a href="https://www.facebook.com/p/Forum-SMK-IPTEK-Tangsel-100063963043977/?locale=id_ID" target="_blank">Facebook</a>
-                        <a href="https://www.youtube.com/@smkiptektangsel9216" target="_blank">YouTube</a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h4>LOKASI</h4>
-                    <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.3869737190626!2d106.66082547499147!3d-6.343904493645882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e4562826eaa3%3A0x6a04cf5089ea2988!2sSMK%20IPTEK%20TANGSEL!5e0!3m2!1sid!2sid!4v1760788747257!5m2!1sid!2sid" 
-                        width="600" 
-                        height="200" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 SMK IPTEK TANGSEL. All rights reserved.</p>
-            </div>
+        <!-- Menu navigasi -->
+        <nav class="nav-menu" id="navMenu">
+          <ul>
+            <li><a href="index.html#home" class="nav-link">Home</a></li>
+            <li><a href="index.html#ekskul" class="nav-link">Ekskul</a></li>
+            <li><a href="index.html#jadwal" class="nav-link">Jadwal</a></li>
+            <li><a href="index.html#event" class="nav-link">Event</a></li>
+            <li><a href="index.html#contact" class="nav-link">Kontak</a></li>
+          </ul>
+        </nav>
+
+        <a href="admin-login.html" class="btn-login">LOGIN ADMIN</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- === DETAIL EKSKUL === -->
+  <section class="detail-section">
+    <div class="container">
+      <div class="detail-content" id="detailContent">
+        <!-- Content will be loaded by JavaScript -->
+      </div>
+      
+      <!-- Form pendaftaran -->
+      <div class="registration-form-section" id="registrationSection" style="display: none;">
+        <h2>Daftar Sekarang</h2>
+        <form onsubmit="handleRegistration(event)" class="registration-form">
+          <div class="form-group">
+            <label for="regName">Nama Lengkap</label>
+            <input type="text" id="regName" name="name" required placeholder="Masukkan nama lengkap">
+          </div>
+          <div class="form-group">
+            <label for="regClass">Kelas</label>
+            <input type="text" id="regClass" name="class" required placeholder="Masukkan kelas (e.g. X-A, XI-B)">
+          </div>
+          <div class="form-group">
+            <label for="regPhone">Nomor Telepon</label>
+            <input type="tel" id="regPhone" name="phone" required placeholder="Nomor HP aktif">
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" name="email" required placeholder="Email aktif">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">DAFTAR</button>
+            <button type="button" onclick="closeRegistrationForm()" class="btn-cancel">BATAL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- === FOOTER === -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h4>SMK IPTEK TANGSEL</h4>
+          <p>Jl. Lkr. Selatan, Muncul, Kec. Setu, Kota Tangerang Selatan, Banten, South Tangerang 15314</p>
         </div>
-    </footer>
+        <div class="footer-col">
+          <h4>KONTAK</h4>
+          <p>Telp: (021) 7562-457<br>Email: smkiptektangsel@gmail.com<br></p>
+        </div>
+        <div class="footer-col">
+          <h4>MEDIA SOSIAL</h4>
+          <div class="social-media">
+  <a href="https://www.facebook.com" target="_blank" aria-label="Facebook" class="social-icon">
+    <!-- Facebook SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+      <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H7.9v-2.9h2.4V9.97c0-2.37 1.42-3.68 3.58-3.68 1.04 0 2.12.19 2.12.19v2.33h-1.19c-1.17 0-1.54.73-1.54 1.48v1.77h2.63l-.42 2.9h-2.21v7.03c4.78-.8 8.44-4.94 8.44-9.93z"/>
+    </svg>
+  </a>
 
-    <script src="script.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', loadEkskulDetail);
-    </script>
+  <a href="https://www.instagram.com" target="_blank" aria-label="Instagram" class="social-icon">
+    <!-- Instagram SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+      <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm4.8-.9a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z"/>
+    </svg>
+  </a>
+
+  <a href="https://www.youtube.com" target="_blank" aria-label="YouTube" class="social-icon">
+    <!-- YouTube SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+  <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+</svg>
+  </a>
+
+  <a href="https://www.tiktok.com" target="_blank" aria-label="TikTok" class="social-icon">
+    <!-- TikTok SVG -->
+   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
+  <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/>
+</svg>
+  </a>
+</div>
+        </div>
+        <div class="footer-col">
+          <h4>LOKASI</h4>
+          <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.3869737190626!2d106.66082547499147!3d-6.343904493645882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69e4562826eaa3%3A0x6a04cf5089ea2988!2sSMK%20IPTEK%20TANGSEL!5e0!3m2!1sid!2sid!4v1760788747257!5m2!1sid!2sid" 
+              width="600" height="200" style="border:0;" allowfullscreen="" loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 SMK IPTEK TANGSEL. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- === SCRIPT === -->
+  <script src="script.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', loadEkskulDetail);
+
+  const menuToggle = document.getElementById("menuToggle");
+  const navMenu = document.getElementById("navMenu");
+
+  // Toggle menu saat tombol garis 3 diklik
+  menuToggle.addEventListener("click", (e) => {
+    e.stopPropagation(); // cegah event click bubbling
+    menuToggle.classList.toggle("active");
+    navMenu.classList.toggle("show"); // pakai .show biar cocok dengan CSS
+  });
+
+  // Tutup menu jika klik di luar area menu
+  document.addEventListener("click", (e) => {
+    if (!menuToggle.contains(e.target) && !navMenu.contains(e.target)) {
+      menuToggle.classList.remove("active");
+      navMenu.classList.remove("show");
+    }
+  });
+
+  // Tutup menu ketika link di dalam menu diklik
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", () => {
+      menuToggle.classList.remove("active");
+      navMenu.classList.remove("show");
+    });
+  });
+</script>
+
 </body>
 </html>
