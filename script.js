@@ -1,4 +1,3 @@
-
 // Data Storage using localStorage
 const STORAGE_KEYS = {
   EKSKUL: "smaiptektangsel_ekskul",
@@ -6,10 +5,96 @@ const STORAGE_KEYS = {
   ADMIN: "smaiptektangsel_admin",
   IMAGES: "smaiptektangsel_images",
   GALLERY: "ssmaiptektangsel_gallery",
-}; // ✅ tambahkan titik koma di sini!
+} // ✅ tambahkan titik koma di sini!
 
-let currentUploadEkskulId = null;
+let currentUploadEkskulId = null
+let currentUploadEventId = null
+let tempEventImage = null
+let tempUploadedImages = [null, null, null, null] // Array for 4 photos
+let currentSelectedEkskulId = null
 
+const REGISTRATIONS_STORAGE_KEY = "smaiptektangsel_registrations"
+
+// Authentication Functions (dari admin.js)
+function checkAuth() {
+  const isLoggedIn = localStorage.getItem(STORAGE_KEYS.ADMIN)
+  if (!isLoggedIn || isLoggedIn !== "true") {
+    window.location.href = "admin-login.html"
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem(STORAGE_KEYS.ADMIN)
+  window.location.href = "admin-login.html"
+}
+
+// Get all registrations from localStorage
+function getRegistrations() {
+  return JSON.parse(localStorage.getItem(REGISTRATIONS_STORAGE_KEY) || "[]")
+}
+
+// Get registrations for specific ekskul
+function getRegistrationsByEkskul(ekskulId) {
+  const registrations = getRegistrations()
+  return registrations.filter((reg) => reg.ekskulId === ekskulId)
+}
+
+// Save registration
+function saveRegistration(registration) {
+  const registrations = getRegistrations()
+  registrations.push(registration)
+  localStorage.setItem(REGISTRATIONS_STORAGE_KEY, JSON.stringify(registrations))
+}
+
+// Delete registration
+function deleteRegistration(registrationId) {
+  let registrations = getRegistrations()
+  registrations = registrations.filter((reg) => reg.id !== registrationId)
+  localStorage.setItem(REGISTRATIONS_STORAGE_KEY, JSON.stringify(registrations))
+}
+
+// Handle registration form submission
+function handleRegistration(event) {
+  event.preventDefault()
+
+  const urlParams = new URLSearchParams(window.location.search)
+  const ekskulId = Number.parseInt(urlParams.get("id"))
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === ekskulId)
+
+  if (!ekskul) {
+    alert("Ekstrakurikuler tidak ditemukan!")
+    return
+  }
+
+  const form = event.target
+  const registration = {
+    id: Date.now(),
+    ekskulId: ekskulId,
+    ekskulName: ekskul.name,
+    name: form.name.value,
+    class: form.class.value,
+    phone: form.phone.value,
+    email: form.email.value,
+    registrationDate: new Date().toLocaleDateString("id-ID"),
+  }
+
+  saveRegistration(registration)
+  alert("Pendaftaran berhasil! Terima kasih telah mendaftar.")
+  form.reset()
+  closeRegistrationForm()
+}
+
+// Close registration form
+function closeRegistrationForm() {
+  document.getElementById("registrationSection").style.display = "none"
+}
+
+// Open registration form
+function openRegistrationForm() {
+  document.getElementById("registrationSection").style.display = "block"
+  document.getElementById("registrationSection").scrollIntoView({ behavior: "smooth" })
+}
 
 function initPageTransition() {
   const transition = document.querySelector(".page-transition")
@@ -60,7 +145,6 @@ function initializeData() {
         fullDescription:
           "Ekstrakurikuler basket SMK IPTEK TANGSEL adalah wadah bagi siswa yang ingin mengembangkan kemampuan bermain basket, meningkatkan kebugaran fisik, dan membangun kerja sama tim yang solid. Kami memiliki pelatih berpengalaman dan fasilitas lapangan yang memadai.",
         schedule: "Senin & Rabu, 15:00 - 17:00",
-        formLink: "https://forms.google.com/basket",
         images: [],
       },
       {
@@ -71,7 +155,6 @@ function initializeData() {
         fullDescription:
           "Ekstrakurikuler musik memberikan kesempatan bagi siswa untuk belajar berbagai alat musik seperti gitar, keyboard, drum, dan vokal. Kami sering tampil di acara sekolah dan kompetisi musik antar sekolah.",
         schedule: "Selasa & Kamis, 15:00 - 17:00",
-        formLink: "https://forms.google.com/musik",
         images: [],
       },
       {
@@ -82,7 +165,6 @@ function initializeData() {
         fullDescription:
           "Pramuka SMK IPTEK TANGSEL mengajarkan nilai-nilai kepemimpinan, kemandirian, dan keterampilan outdoor. Kami rutin mengadakan kemah, hiking, dan kegiatan sosial untuk mengembangkan karakter siswa.",
         schedule: "Jumat, 14:00 - 17:00",
-        formLink: "https://forms.google.com/pramuka",
         images: [],
       },
       {
@@ -93,7 +175,6 @@ function initializeData() {
         fullDescription:
           "Ekstrakurikuler tari mengajarkan berbagai jenis tarian mulai dari tari tradisional Indonesia hingga tari modern. Siswa akan tampil di berbagai event sekolah dan festival seni.",
         schedule: "Rabu & Jumat, 15:00 - 17:00",
-        formLink: "https://forms.google.com/tari",
         images: [],
       },
       {
@@ -104,7 +185,6 @@ function initializeData() {
         fullDescription:
           "Ekstrakurikuler robotika mengajarkan dasar-dasar pemrograman, elektronika, dan desain robot. Siswa akan berkesempatan mengikuti kompetisi robotika tingkat nasional.",
         schedule: "Selasa & Kamis, 15:30 - 17:30",
-        formLink: "https://forms.google.com/robotika",
         images: [],
       },
       {
@@ -115,7 +195,6 @@ function initializeData() {
         fullDescription:
           "Belajar teknik fotografi dari dasar hingga mahir, termasuk komposisi, lighting, dan editing. Siswa akan mendokumentasikan berbagai kegiatan sekolah dan mengikuti pameran foto.",
         schedule: "Sabtu, 09:00 - 12:00",
-        formLink: "https://forms.google.com/fotografi",
         images: [],
       },
     ]
@@ -150,7 +229,6 @@ function initializeData() {
     localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(defaultEvents))
   }
 
-  // Initialize gallery images if not already present
   if (!localStorage.getItem(STORAGE_KEYS.GALLERY)) {
     const defaultGalleryImages = []
     localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(defaultGalleryImages))
@@ -177,25 +255,6 @@ function saveEkskul(data) {
 
 function saveEvents(data) {
   localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(data))
-}
-
-function saveGalleryImages() {
-  const galleryImages = []
-
-  for (let i = 0; i < 10; i++) {
-    const preview = document.getElementById(`galleryPreview${i}`)
-    if (preview && preview.src && preview.style.display !== "none") {
-      galleryImages.push(preview.src)
-    }
-  }
-
-  if (galleryImages.length === 0) {
-    alert("Belum ada foto yang diupload!")
-    return
-  }
-
-  localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(galleryImages))
-  alert(`${galleryImages.length} foto galeri berhasil disimpan!`)
 }
 
 // Load Ekskul List on Home Page
@@ -227,7 +286,6 @@ function loadGallery() {
   const galleryImages = getGalleryImages()
 
   if (galleryImages.length > 0) {
-    // Use uploaded images
     const colors = ["pink", "lime", "black", "pink", "lime", "black", "lime", "pink", "black", "lime"]
     container.innerHTML = galleryImages
       .map((imageData, index) => {
@@ -240,7 +298,7 @@ function loadGallery() {
       })
       .join("")
   } else {
-    // Use default placeholders
+    // Use default placeholders if no images uploaded
     const colors = ["pink", "lime", "black", "pink", "lime", "black", "lime", "pink", "black", "lime"]
     const activities = [
       "Basketball",
@@ -325,7 +383,6 @@ function loadEkskulDetail() {
   // Get uploaded images or use placeholders - always show 4 images
   let images = []
   if (ekskul.images && ekskul.images.length > 0) {
-    // Use uploaded images, fill remaining slots with placeholders
     for (let i = 0; i < 4; i++) {
       if (ekskul.images[i]) {
         images.push(ekskul.images[i])
@@ -336,7 +393,6 @@ function loadEkskulDetail() {
       }
     }
   } else {
-    // Use all placeholders
     images = [
       `https://placehold.co/300x200/ffb6c1/000000?text=${ekskul.name}+1`,
       `https://placehold.co/300x200/ccff00/000000?text=${ekskul.name}+2`,
@@ -367,7 +423,7 @@ function loadEkskulDetail() {
         </div>
         
         <div class="detail-cta">
-            <a href="${ekskul.formLink}" target="_blank" class="btn-register">AYO DAFTAR SEKARANG</a>
+            <button onclick="openRegistrationForm()" class="btn-register">AYO DAFTAR SEKARANG</button>
         </div>
     `
 }
@@ -438,13 +494,7 @@ function isLoggedIn() {
   return localStorage.getItem(STORAGE_KEYS.ADMIN) === "true"
 }
 
-// Handle Logout
-function handleLogout() {
-  localStorage.removeItem(STORAGE_KEYS.ADMIN)
-  window.location.href = "admin-login.html"
-}
-
-// Show Dashboard Section
+// Admin Dashboard Functions
 function showSection(sectionName) {
   // Hide all sections
   document.querySelectorAll(".dashboard-section").forEach((section) => {
@@ -463,7 +513,10 @@ function showSection(sectionName) {
   }
 
   // Add active class to clicked link
-  event.target.classList.add("active")
+  // Need to check if event and event.target exist because showSection might be called without an event
+  if (event && event.target) {
+    event.target.classList.add("active")
+  }
 }
 
 // Load Dashboard Data
@@ -472,13 +525,14 @@ function loadDashboardData() {
   loadEventsTable()
   loadScheduleTable()
   loadGalleryDashboard()
+  loadEkskulButtons()
 }
 
 // Load Ekskul Table
 function loadEkskulTable() {
-  const ekskulList = getEkskul();
-  const tbody = document.getElementById("ekskulTableBody");
-  if (!tbody) return;
+  const ekskulList = getEkskul()
+  const tbody = document.getElementById("ekskulTableBody")
+  if (!tbody) return
 
   tbody.innerHTML = ekskulList
     .map(
@@ -494,48 +548,48 @@ function loadEkskulTable() {
                 <button class="btn-delete" onclick="deleteEkskul(${ekskul.id})">HAPUS</button>
             </td>
         </tr>
-      `
+      `,
     )
-    .join("");
+    .join("")
 }
 
+// Edit Ekskul
 function editEkskul(id) {
-  const ekskulList = getEkskul();
-  const ekskul = ekskulList.find((e) => e.id === id);
-  if (!ekskul) return;
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === id)
+  if (!ekskul) return
 
   // Tampilkan form tambah ekskul untuk edit
-  const formContainer = document.getElementById("addEkskulForm");
-  formContainer.style.display = "block";
+  const formContainer = document.getElementById("addEkskulForm")
+  formContainer.style.display = "block"
 
-  const form = formContainer.querySelector("form");
-  form.name.value = ekskul.name;
-  form.icon.value = ekskul.icon;
-  form.description.value = ekskul.description;
-  form.fullDescription.value = ekskul.fullDescription;
-  form.schedule.value = ekskul.schedule;
-  form.formLink.value = ekskul.formLink;
+  const form = formContainer.querySelector("form")
+  form.name.value = ekskul.name
+  form.icon.value = ekskul.icon
+  form.description.value = ekskul.description
+  form.fullDescription.value = ekskul.fullDescription
+  form.schedule.value = ekskul.schedule
+  // Removed formLink as it's not in the updated structure for edit
 
   // Ubah fungsi submit untuk menyimpan edit
-  form.onsubmit = function (event) {
-    event.preventDefault();
+  form.onsubmit = (event) => {
+    event.preventDefault()
 
-    ekskul.name = form.name.value;
-    ekskul.icon = form.icon.value;
-    ekskul.description = form.description.value;
-    ekskul.fullDescription = form.fullDescription.value;
-    ekskul.schedule = form.schedule.value;
-    ekskul.formLink = form.formLink.value;
+    ekskul.name = form.name.value
+    ekskul.icon = form.icon.value
+    ekskul.description = form.description.value
+    ekskul.fullDescription = form.fullDescription.value
+    ekskul.schedule = form.schedule.value
+    // Removed formLink update
 
-    saveEkskul(ekskulList);
-    hideAddEkskulForm();
-    loadEkskulTable();
-    loadScheduleTable();
+    saveEkskul(ekskulList)
+    hideAddEkskulForm()
+    loadEkskulTable()
+    loadScheduleTable()
 
-    alert("Data ekskul berhasil diperbarui!");
-  };
+    alert("Data ekskul berhasil diperbarui!")
+  }
 }
-
 
 // Load Events Table
 function loadEventsTable() {
@@ -624,7 +678,6 @@ function handleAddEkskul(event) {
     description: form.description.value,
     fullDescription: form.fullDescription.value,
     schedule: form.schedule.value,
-    formLink: form.formLink.value,
     images: [],
   }
 
@@ -698,141 +751,136 @@ function deleteEvent(id) {
   alert("Event berhasil dihapus!")
 }
 
-// Image Upload Functions
-let tempUploadedImages = [null, null, null, null] // Array for 4 photos
-
+// Image Upload Functions for Ekskul
 function openImageUpload(id) {
-  currentUploadEkskulId = id;
-  const ekskulList = getEkskul();
-  const ekskul = ekskulList.find(e => e.id === id);
-  if (!ekskul) return;
+  currentUploadEkskulId = id
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === id)
+  if (!ekskul) return
 
-  document.getElementById("uploadEkskulName").textContent = ekskul.name;
-  document.getElementById("imageUploadSection").style.display = "block";
+  document.getElementById("uploadEkskulName").textContent = ekskul.name
+  document.getElementById("imageUploadSection").style.display = "block"
 
   // tampilkan foto yang sudah tersimpan
   for (let i = 0; i < 4; i++) {
-    const preview = document.getElementById(`preview${i}`);
+    const preview = document.getElementById(`preview${i}`)
     if (ekskul.images && ekskul.images[i]) {
-      preview.src = ekskul.images[i];
-      preview.style.display = "block";
+      preview.src = ekskul.images[i]
+      preview.style.display = "block"
     } else {
-      preview.style.display = "none";
+      preview.style.display = "none"
     }
   }
 }
 
 function triggerMultipleUpload() {
-  document.getElementById("multiImageInput").click();
+  document.getElementById("multiImageInput").click()
 }
 
 function handleMultipleUpload(event) {
-  const files = Array.from(event.target.files).slice(0, 4); // maksimal 4
-  if (files.length === 0) return;
+  const files = Array.from(event.target.files).slice(0, 4) // maksimal 4
+  if (files.length === 0) return
 
-  const ekskulList = getEkskul();
-  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
-  if (!ekskul) return;
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === currentUploadEkskulId)
+  if (!ekskul) return
 
-  ekskul.images = []; // reset foto lama
+  ekskul.images = [] // reset foto lama
 
-  let loadedCount = 0;
+  let loadedCount = 0
 
   files.forEach((file, index) => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      ekskul.images.push(e.target.result);
-      const preview = document.getElementById(`preview${index}`);
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      ekskul.images.push(e.target.result)
+      const preview = document.getElementById(`preview${index}`)
       if (preview) {
-        preview.src = e.target.result;
-        preview.style.display = "block";
+        preview.src = e.target.result
+        preview.style.display = "block"
       }
 
-      loadedCount++;
+      loadedCount++
       if (loadedCount === files.length) {
-        saveEkskul(ekskulList);
-        alert("Foto berhasil disimpan dan terhubung ke detail ekskul!");
+        saveEkskul(ekskulList)
+        alert("Foto berhasil disimpan dan terhubung ke detail ekskul!")
       }
-    };
-    reader.readAsDataURL(file);
-  });
+    }
+    reader.readAsDataURL(file)
+  })
 
   // Kosongkan preview sisanya
   for (let i = files.length; i < 4; i++) {
-    const preview = document.getElementById(`preview${i}`);
-    if (preview) preview.style.display = "none";
+    const preview = document.getElementById(`preview${i}`)
+    if (preview) preview.style.display = "none"
   }
 }
 
 function deleteImage(index) {
-  if (currentUploadEkskulId === null) return;
+  if (currentUploadEkskulId === null) return
 
-  const ekskulList = getEkskul();
-  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
-  if (!ekskul || !ekskul.images) return;
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === currentUploadEkskulId)
+  if (!ekskul || !ekskul.images) return
 
   // Hapus foto berdasarkan index
-  ekskul.images.splice(index, 1);
+  ekskul.images.splice(index, 1)
 
   // Simpan perubahan ke localStorage
-  saveEkskul(ekskulList);
+  saveEkskul(ekskulList)
 
   // Refresh semua preview agar urutannya rapi kembali
   for (let i = 0; i < 4; i++) {
-    const preview = document.getElementById(`preview${i}`);
+    const preview = document.getElementById(`preview${i}`)
     if (preview) {
       if (ekskul.images[i]) {
-        preview.src = ekskul.images[i];
-        preview.style.display = "block";
+        preview.src = ekskul.images[i]
+        preview.style.display = "block"
       } else {
-        preview.src = "";
-        preview.style.display = "none";
+        preview.src = ""
+        preview.style.display = "none"
       }
     }
   }
 
-  alert("Foto berhasil dihapus!");
+  alert("Foto berhasil dihapus!")
 }
 
 function deleteAllImages() {
-  if (currentUploadEkskulId === null) return;
-  const ekskulList = getEkskul();
-  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
-  if (!ekskul) return;
+  if (currentUploadEkskulId === null) return
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === currentUploadEkskulId)
+  if (!ekskul) return
 
-  ekskul.images = [];
-  saveEkskul(ekskulList);
+  ekskul.images = []
+  saveEkskul(ekskulList)
 
   for (let i = 0; i < 4; i++) {
-    const preview = document.getElementById(`preview${i}`);
+    const preview = document.getElementById(`preview${i}`)
     if (preview) {
-      preview.src = "";
-      preview.style.display = "none";
+      preview.src = ""
+      preview.style.display = "none"
     }
   }
 
-  alert("Semua foto berhasil dihapus!");
+  alert("Semua foto berhasil dihapus!")
 }
-
 
 function saveImages() {
-  if (currentUploadEkskulId === null) return;
-  const ekskulList = getEkskul();
-  const ekskul = ekskulList.find(e => e.id === currentUploadEkskulId);
-  if (!ekskul) return;
+  if (currentUploadEkskulId === null) return
+  const ekskulList = getEkskul()
+  const ekskul = ekskulList.find((e) => e.id === currentUploadEkskulId)
+  if (!ekskul) return
 
-  saveEkskul(ekskulList);
-  alert("Foto ekskul berhasil disimpan!");
-  closeImageUpload();
+  saveEkskul(ekskulList)
+  alert("Foto ekskul berhasil disimpan!")
+  closeImageUpload()
 }
-
 
 function closeImageUpload() {
   document.getElementById("imageUploadSection").style.display = "none"
   currentUploadEkskulId = null
   tempUploadedImages = [null, null, null, null]
 }
-
 
 function triggerFileInput(slotIndex) {
   document.getElementById(`imageInput${slotIndex}`).click()
@@ -898,36 +946,8 @@ function removeSlotImage(slotIndex) {
   resetSlot(slotIndex)
 }
 
-function saveImages() {
-  if (!currentUploadEkskulId) return
-
-  // Filter out null values and check if at least one image exists
-  const validImages = tempUploadedImages.filter((img) => img !== null)
-
-  if (validImages.length === 0) {
-    alert("Belum ada foto yang diupload!")
-    return
-  }
-
-  const ekskulList = getEkskul()
-  const ekskulIndex = ekskulList.findIndex((e) => e.id === currentUploadEkskulId)
-
-  if (ekskulIndex === -1) return
-
-  // Save all 4 slots (including nulls) to maintain slot positions
-  ekskulList[ekskulIndex].images = [...tempUploadedImages]
-  saveEkskul(ekskulList)
-
-  alert(`${validImages.length} foto berhasil disimpan!`)
-  closeImageUpload()
-}
-
 // Event Image Upload Functions
-let currentUploadEventId = null
-let tempEventImage = null
-
 function openEventImageUpload(eventId) {
-  console.log("[v0] Opening event image upload for event ID:", eventId)
   currentUploadEventId = eventId
   tempEventImage = null
 
@@ -935,21 +955,17 @@ function openEventImageUpload(eventId) {
   const event = events.find((e) => e.id === eventId)
 
   if (!event) {
-    console.log("[v0] Event not found")
     return
   }
 
-  console.log("[v0] Event found:", event)
   document.getElementById("uploadEventName").textContent = event.title
   document.getElementById("eventImageUploadSection").style.display = "block"
 
   // Load existing image if any
   if (event.image) {
-    console.log("[v0] Loading existing image")
     tempEventImage = event.image
     displayEventImage(event.image)
   } else {
-    console.log("[v0] No existing image, resetting slot")
     resetEventSlot()
   }
 
@@ -958,7 +974,6 @@ function openEventImageUpload(eventId) {
 }
 
 function closeEventImageUpload() {
-  console.log("[v0] Closing event image upload")
   document.getElementById("eventImageUploadSection").style.display = "none"
   currentUploadEventId = null
   tempEventImage = null
@@ -966,14 +981,10 @@ function closeEventImageUpload() {
 }
 
 function handleEventImageUpload(event) {
-  console.log("[v0] Handling event image upload")
   const file = event.target.files[0]
   if (!file) {
-    console.log("[v0] No file selected")
     return
   }
-
-  console.log("[v0] File selected:", file.name, "Size:", file.size)
 
   // Check file size (max 2MB)
   if (file.size > 2 * 1024 * 1024) {
@@ -992,7 +1003,6 @@ function handleEventImageUpload(event) {
   // Read file as base64
   const reader = new FileReader()
   reader.onload = (e) => {
-    console.log("[v0] File read successfully, storing in tempEventImage")
     tempEventImage = e.target.result
     displayEventImage(e.target.result)
   }
@@ -1000,7 +1010,6 @@ function handleEventImageUpload(event) {
 }
 
 function displayEventImage(imageData) {
-  console.log("[v0] Displaying event image")
   const preview = document.getElementById("eventPreview")
   const placeholder = document.getElementById("eventPlaceholder")
   const removeBtn = document.getElementById("eventRemove")
@@ -1010,14 +1019,10 @@ function displayEventImage(imageData) {
     preview.style.display = "block"
     placeholder.style.display = "none"
     removeBtn.style.display = "block"
-    console.log("[v0] Image displayed successfully")
-  } else {
-    console.log("[v0] Error: Could not find preview elements")
   }
 }
 
 function resetEventSlot() {
-  console.log("[v0] Resetting event slot")
   const preview = document.getElementById("eventPreview")
   const placeholder = document.getElementById("eventPlaceholder")
   const removeBtn = document.getElementById("eventRemove")
@@ -1033,43 +1038,32 @@ function resetEventSlot() {
 }
 
 function removeEventImage() {
-  console.log("[v0] Removing event image")
   tempEventImage = null
   resetEventSlot()
 }
 
 function saveEventImage() {
-  console.log("[v0] Saving event image")
-  console.log("[v0] Current event ID:", currentUploadEventId)
-  console.log("[v0] Temp event image exists:", !!tempEventImage)
-
   if (!currentUploadEventId) {
-    console.log("[v0] Error: No current event ID")
     alert("Error: Tidak ada event yang dipilih!")
     return
   }
 
   if (!tempEventImage) {
-    console.log("[v0] Error: No image uploaded")
     alert("Belum ada foto yang diupload!")
     return
   }
 
   const events = getEvents()
-  console.log("[v0] Current events:", events)
 
   const eventIndex = events.findIndex((e) => e.id === currentUploadEventId)
-  console.log("[v0] Event index:", eventIndex)
 
   if (eventIndex === -1) {
-    console.log("[v0] Error: Event not found in array")
     alert("Error: Event tidak ditemukan!")
     return
   }
 
   events[eventIndex].image = tempEventImage
   saveEvents(events)
-  console.log("[v0] Event image saved successfully")
 
   alert("Foto event berhasil disimpan!")
   closeEventImageUpload()
@@ -1146,6 +1140,136 @@ function clearAllGallery() {
   alert("Semua foto galeri berhasil dihapus!")
 }
 
+function saveGalleryImages() {
+  const galleryImages = []
+
+  for (let i = 0; i < 10; i++) {
+    const preview = document.getElementById(`galleryPreview${i}`)
+    if (preview && preview.src && preview.style.display !== "none") {
+      galleryImages.push(preview.src)
+    }
+  }
+
+  if (galleryImages.length === 0) {
+    alert("Belum ada foto yang diupload!")
+    return
+  }
+
+  localStorage.setItem(STORAGE_KEYS.GALLERY, JSON.stringify(galleryImages))
+  alert(`${galleryImages.length} foto galeri berhasil disimpan!`)
+
+  loadGallery()
+}
+
+// Load Ekskul Buttons for Admin Dashboard to select student data
+function loadEkskulButtons() {
+  const ekskulList = getEkskul()
+  const container = document.getElementById("ekskulButtonsContainer")
+
+  if (!container) return
+
+  container.innerHTML = ekskulList
+    .map(
+      (ekskul) => `
+        <button class="ekskul-button" onclick="selectEkskul(${ekskul.id}, '${ekskul.name}')">
+            <span class="ekskul-icon">${ekskul.icon}</span>
+            <span class="ekskul-name">${ekskul.name}</span>
+        </button>
+    `,
+    )
+    .join("")
+}
+
+function selectEkskul(ekskulId, ekskulName) {
+  currentSelectedEkskulId = ekskulId
+  document.getElementById("selectedEkskulName").textContent = ekskulName
+  loadStudentRegistrations(ekskulId)
+  document.getElementById("studentDataSection").style.display = "block"
+}
+
+function loadStudentRegistrations(ekskulId) {
+  const registrations = getRegistrationsByEkskul(ekskulId)
+  const tbody = document.getElementById("studentTableBody")
+  const emptyMessage = document.getElementById("emptyMessage")
+
+  if (!tbody) return
+
+  if (registrations.length === 0) {
+    tbody.innerHTML = ""
+    emptyMessage.style.display = "block"
+    return
+  }
+
+  emptyMessage.style.display = "none"
+  tbody.innerHTML = registrations
+    .map(
+      (reg, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${reg.id}</td>
+            <td><strong>${reg.name}</strong></td>
+            <td>${reg.class}</td>
+            <td>${reg.phone}</td>
+            <td>${reg.email}</td>
+            <td>${reg.registrationDate}</td>
+            <td>
+                <button class="btn-delete" onclick="deleteStudentRegistration(${reg.id})">HAPUS</button>
+            </td>
+        </tr>
+    `,
+    )
+    .join("")
+}
+
+function deleteStudentRegistration(registrationId) {
+  if (!confirm("Yakin ingin menghapus data peserta ini?")) return
+
+  deleteRegistration(registrationId)
+  if (currentSelectedEkskulId) {
+    loadStudentRegistrations(currentSelectedEkskulId)
+  }
+  alert("Data peserta berhasil dihapus!")
+}
+
+function downloadStudentData() {
+  if (!currentSelectedEkskulId) {
+    alert("Silakan pilih ekstrakurikuler terlebih dahulu!")
+    return
+  }
+
+  const registrations = getRegistrationsByEkskul(currentSelectedEkskulId)
+
+  if (registrations.length === 0) {
+    alert("Tidak ada data peserta untuk diunduh!")
+    return
+  }
+
+  // Create CSV content
+  let csv = "No,ID,Nama,Kelas,No HP,Email,Tanggal Daftar\n"
+
+  registrations.forEach((reg, index) => {
+    csv += `${index + 1},"${reg.id}","${reg.name}","${reg.class}","${reg.phone}","${reg.email}","${reg.registrationDate}"\n`
+  })
+
+  // Create blob and download
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+  const link = document.createElement("a")
+  const url = URL.createObjectURL(blob)
+
+  link.setAttribute("href", url)
+  link.setAttribute(
+    "download",
+    `peserta_${document.getElementById("selectedEkskulName").textContent}_${new Date().getTime()}.csv`,
+  )
+  link.style.visibility = "hidden"
+
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+
+  alert("Data peserta berhasil diunduh!")
+}
+
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
   initPageTransition()
@@ -1158,24 +1282,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 // ===== ✅ FIXED: Burger menu & auto-close on click =====
-(function initMobileNav() {
-  const menuToggleEl = document.querySelector(".menu-toggle");
-  const navMenuEl = document.querySelector(".nav-menu");
-  const navLinks = document.querySelectorAll(".nav-link");
+;(function initMobileNav() {
+  const menuToggleEl = document.querySelector(".menu-toggle")
+  const navMenuEl = document.querySelector(".nav-menu")
+  const navLinks = document.querySelectorAll(".nav-link")
 
-  if (!menuToggleEl || !navMenuEl) return;
+  if (!menuToggleEl || !navMenuEl) return
 
   // Toggle show/hide menu
   menuToggleEl.addEventListener("click", () => {
-    navMenuEl.classList.toggle("active");
-  });
+    navMenuEl.classList.toggle("active")
+  })
 
   // Close menu when link clicked (mobile only)
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
       if (navMenuEl.classList.contains("active")) {
-        navMenuEl.classList.remove("active");
+        navMenuEl.classList.remove("active")
       }
-    });
-  });
-})();
+    })
+  })
+})()
