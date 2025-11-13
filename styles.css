@@ -3121,3 +3121,48 @@ body.menu-open::after {
     height: 100px;
   }
 }
+
+/* === Tombol Scroll ke Atas (dengan SVG) === */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 55px;
+  height: 55px;
+  background-color: #14ea00;
+  color: #000;
+  border: 4px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+  z-index: 1500;
+  transition: all 0.3s ease-in-out;
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-5px);
+  background-color: #0034df;
+  color: #fff;
+}
+
+/* Saat tombol muncul */
+.scroll-top-btn.show {
+  display: flex;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animasi halus muncul */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SVG-nya sedikit disesuaikan biar presisi di tengah */
+.scroll-top-btn svg {
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+}
